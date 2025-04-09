@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title - My ASP.NET Application</title>
+	@Styles.Render("~/Content/css")
+	@Scripts.Render("~/bundles/modernizr")
+	<!-- Syncfusion ASP.NET MVC control styles -->
+	<link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/28.2.3/bootstrap5.css" />
+	<!-- Syncfusion ASP.NET MVC control scripts -->
+	<script src="https://cdn.syncfusion.com/ej2/28.2.3/dist/ej2.min.js"></script>
+	<!-- Include the necessary CSS files to style the Syncfusion ASP.NET MVC controls: -->
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-base/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-grids/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-buttons/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-popups/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-richtexteditor/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-navigations/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-dropdowns/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-lists/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-inputs/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-calendars/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-notifications/styles/bootstrap5.css" rel="stylesheet" />
+	<link href="https://cdn.syncfusion.com/ej2/28.2.3/ej2-splitbuttons/styles/bootstrap5.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.38/system.js"></script>
+	<script src="https://cdn.syncfusion.com/ej2/syncfusion-helper.js" type="text/javascript"></script>
+
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+		<div class="container">
+			@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+			<button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+					aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+				<ul class="navbar-nav flex-grow-1">
+					<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+					<li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+					<li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container body-content">
+		@RenderBody()
+		<hr />
+		<footer>
+			<p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+		</footer>
+	</div>
+	@Html.EJS().ScriptManager()
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@RenderSection("scripts", required: false)
+</body>
+</html>

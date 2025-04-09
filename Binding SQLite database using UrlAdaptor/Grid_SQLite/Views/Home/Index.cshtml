@@ -1,0 +1,16 @@
+﻿@{
+	ViewBag.Title = "Home Page";
+}
+@using Syncfusion.EJ2
+
+@Html.EJS().Grid("Grid").DataSource(ds => ds.Url("https://localhost:xxxx/Grid/UrlDataSource").Adaptor("UrlAdaptor").InsertUrl("https://localhost:xxxx/Grid/Insert").UpdateUrl("https://localhost:xxxx/Grid/Update").RemoveUrl("https://localhost:xxxx/Grid/Remove")).AllowPaging(true).AllowGrouping(true).AllowFiltering(true).AllowSorting(true).EditSettings(edit =>
+	{
+	edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true).Mode(Syncfusion.EJ2.Grids.EditMode.Normal);
+}).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel", "Search" }).Columns(col =>
+{
+	col.Field("OrderID").HeaderText("Order ID").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).IsPrimaryKey(true).IsIdentity(true).Add();
+	col.Field("CustomerID").HeaderText("Customer Name").Width("100").ValidationRules(new { required = "true" }).Add();
+	col.Field("EmployeeID").HeaderText("Employee ID").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).ValidationRules(new { required = "true", number = true }).Add();
+	col.Field("Freight").HeaderText("Freight").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Format("C2").ValidationRules(new { required = "true", min = 1, max = 1000 }).Add();
+	col.Field("ShipCity").HeaderText("Ship City").Width("120").ValidationRules(new { required = "true" }).Add();
+}).Render()

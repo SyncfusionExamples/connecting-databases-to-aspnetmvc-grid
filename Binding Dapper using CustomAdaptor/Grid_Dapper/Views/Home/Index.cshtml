@@ -1,0 +1,78 @@
+﻿@Html.EJS().Grid("Grid").Columns(col =>
+{
+    col.Field("OrderID").HeaderText("Order ID").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).IsPrimaryKey(true).IsIdentity(true).Add();
+    col.Field("CustomerID").HeaderText("Customer Name").Width("100").ValidationRules(new { required = "true" }).Add();
+    col.Field("EmployeeID").HeaderText("Employee ID").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).ValidationRules(new { required = "true", number = true}).Add();
+    col.Field("Freight").HeaderText("Freight").Width("100").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Format("C2").ValidationRules(new { required = "true", min=1, max=1000 }).Add();
+    col.Field("ShipCity").HeaderText("Ship City").Width("120").ValidationRules(new { required = "true" }).Add();
+}).EditSettings(edit => { edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true).Mode(Syncfusion.EJ2.Grids.EditMode.Normal); }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" }).Render()
+
+<script>
+    class CustomAdaptor extends ej.data.UrlAdaptor {
+        processResponse(data, ds, query, xhr, request, changes) {
+            var original = super.processResponse(data, ds, query, xhr, request, changes);
+            return original;
+        }
+    }
+	insert(dm, data) {
+        return {
+                url: dm.dataSource.insertUrl || dm.dataSource.url,
+                data: JSON.stringify({
+                    __RequestVerificationToken: "Syncfusion",
+                    value: data,
+                    action: 'insert'
+                }),
+                type: 'POST'
+        };
+    }
+	update(dm, keyField, value) {
+		return {
+			url: dm.dataSource.updateUrl || dm.dataSource.url,
+			data: JSON.stringify({
+			__RequestVerificationToken: "Syncfusion",
+			value: value,
+			action: 'update',
+			}),
+			type: 'POST',
+		};
+	}
+	remove(dm, keyField, value) {
+		return {
+		url: dm.dataSource.removeUrl || dm.dataSource.url,
+		data: JSON.stringify({
+		__RequestVerificationToken: "Syncfusion",
+		key: value,
+		keyColumn: keyField,
+		action: 'remove',
+		}),
+		type: 'POST',
+		};
+	}
+	batchRequest(dm, changes, e) {
+            return {
+            url: dm.dataSource.batchUrl || dm.dataSource.url,
+            data: JSON.stringify({
+            __RequestVerificationToken: "Syncfusion",
+            added: changes.addedRecords,
+            changed: changes.changedRecords,
+            deleted: changes.deletedRecords,
+            key: e.key,
+            action: 'batch',
+            }),
+            type: 'POST',
+            };
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let grid = document.getElementById("Grid").ej2_instances[0];
+        if (grid) {
+            let dataManager = new ejs.data.DataManager({
+                url: "https://localhost:xxxx/api/Grid", // Replace xxxx with your actual port number.
+                adaptor: new CustomAdaptor(),
+                insertUrl: "https://localhost:xxxx/api/Grid/Insert",
+                updateUrl: "https://localhost:xxxx/api/Grid/Update",
+                removeUrl: "https://localhost:xxxx/api/Grid/Remove",
+            });
+            grid.dataSource = dataManager;
+        }
+    });
+</script>

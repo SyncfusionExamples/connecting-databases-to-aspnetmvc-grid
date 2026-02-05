@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var date = DateTime.Now;
+}
+<div style="margin-top: 100px">
+    @Html.EJS().Grid("Grid").DataSource(ds => ds.Url("https://localhost:44373/Grid/UrlDataSource")
+        .UpdateUrl("https://localhost:44373/Grid/Update")
+        .InsertUrl("https://localhost:44373/Grid/Insert")
+        .RemoveUrl("https://localhost:44373/Grid/Remove")
+        .BatchUrl("https://localhost:44373/Grid/BatchUpdate").Adaptor("UrlAdaptor")).Columns(col =>
+        {
+            col.Field("TicketId").HeaderText("ID").Width("50").IsPrimaryKey(true).IsIdentity(true).Add();
+            col.Field("PublicTicketId").HeaderText("Ticket ID").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).ValidationRules(new { required = true }).Add();
+            col.Field("Title").HeaderText("Title").Width("150").Add();
+            col.Field("Department").HeaderText("Department").Width("110").Add();
+            col.Field("Assignee").HeaderText("Assignee").Width("150").Add();
+            col.Field("Status").HeaderText("Status").Width("120").DefaultValue("Open").ValidationRules(new { required = true }).Add();
+            col.Field("Priority").HeaderText("Priority").Width("120").DefaultValue("Medium").ValidationRules(new { required = true }).Add();
+            col.Field("CreatedAt").HeaderText("Created At").EditType("datetimepickeredit").Type("datetime").Width("180").DefaultValue(date).Format("dd/MM/yyyy HH:mm:ss a").ValidationRules(new { required = true }).Add();
+            col.Field("UpdatedAt").HeaderText("Updated At").EditType("datetimepickeredit").Type("datetime").Width("180").DefaultValue(date).Format("dd/MM/yyyy HH:mm:ss a").ValidationRules(new { required = true }).Add();
+        }).AllowSorting(true).AllowFiltering(true).AllowPaging(true).PageSettings(page => page.PageSize(2)).EditSettings(edit =>
+        {
+            edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true).Mode(Syncfusion.EJ2.Grids.EditMode.Normal);
+        }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel", "Search" }).Render()
+</div>
+<script></script>

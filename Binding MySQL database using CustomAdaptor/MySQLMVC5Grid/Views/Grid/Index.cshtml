@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var date = DateTime.Now;
+}
+<div style="margin-top: 100px">
+    @Html.EJS().Grid("Grid").Load("load").Columns(col =>
+    {
+        col.Field("SNo").HeaderText("S.No").Width("70").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+        col.Field("Id").HeaderText("ID").Width("80").IsPrimaryKey(true).IsIdentity(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+        col.Field("TransactionId").HeaderText("Transaction ID").Width("160").ValidationRules(new { required = true, maxLength = 50 }).Add();
+        col.Field("CustomerId").HeaderText("Customer ID").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).EditType("numericedit").ValidationRules(new { required = true, number = true }).Add();
+        col.Field("OrderId").HeaderText("Order ID").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).EditType("numericedit").ValidationRules(new { number = true }).Add();
+        col.Field("InvoiceNumber").HeaderText("Invoice #").Width("150").ValidationRules(new { maxLength = 50 }).Add();
+        col.Field("Description").HeaderText("Description").Width("220").ValidationRules(new { maxLength = 500 }).Add();
+        col.Field("Amount").HeaderText("Amount").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).EditType("numericedit").Format("N2").ValidationRules(new { required = true, number = true }).Add();
+        col.Field("CurrencyCode").HeaderText("Currency").Width("110").ValidationRules(new { maxLength = 10 }).Add();
+        col.Field("TransactionType").HeaderText("Type").Width("120").ValidationRules(new { maxLength = 50 }).Add();
+        col.Field("PaymentGateway").HeaderText("Gateway").Width("140").ValidationRules(new { maxLength = 100 }).Add();
+        col.Field("CreatedAt").HeaderText("Created At").Type("datetime").Format("dd/MM/yyyy HH:mm:ss a").Width("190").DefaultValue(date).Add();
+        col.Field("CompletedAt").HeaderText("Completed At").Type("datetime").Format("dd/MM/yyyy HH:mm:ss a").Width("190").EditType("datetimepickeredit").Add();
+        col.Field("Status").HeaderText("Status").Width("130").ValidationRules(new { maxLength = 50 }).DefaultValue("SUCCESS").Add();
+    }).AllowSorting(true).AllowFiltering(true).AllowPaging(true).PageSettings(page => page.PageSize(2)).EditSettings(edit =>
+    {
+    edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true).Mode(Syncfusion.EJ2.Grids.EditMode.Batch);
+    }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel", "Search" }).Render()
+</div>
+<script>
+    class CustomAdaptor extends ej.data.UrlAdaptor {
+		processResponse(data, ds, query, xhr, request, changes) {
+			let i = 0;
+			const original = super.processResponse(data, ds, query, xhr, request, changes);
+			// Adding serial number to each row.
+			if (original.result) {
+				original.result.forEach((item) => ej.base.setValue('SNo', ++i, item));
+			}
+			return original;
+		}
+		beforeSend(dm, request, settings) {
+			request.headers.set('Authorization', `true`);
+			super.beforeSend(dm, request, settings);
+		}
+		processQuery(dm, query) {
+            dm.dataSource.url = 'https://localhost:44372/Grid/UrlDataSource'; // Update with your API endpoint.
+			query.addParams('Syncfusion in ASP.NET MVC Grid', 'true'); // Add additional parameters.
+			return super.processQuery.apply(this, arguments);
+        }
+
+        // ---- CREATE with optional overide ----
+        // shape request sent for "insert"
+        insert(dm, data, tableName) {
+            return {
+                url: 'https://localhost:44372/Grid/Insert',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ value: data })
+            };
+        }
+
+        // ---- UPDATE with optional overide ----
+        // value is the updated entity, keyField is the PK name used by Grid
+        update(dm, keyField, value, tableName) {
+            return {
+                url: 'https://localhost:44372/Grid/Update',
+                type: 'POST', // use PUT if your server expects PUT
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ value: value })
+            };
+        }
+
+        // ---- DELETE with optional overide ----
+        // value is either the PK value or an object, we send only the key required by your MVC action
+        remove(dm, keyField, value, tableName) {
+            const keyValue = (value && typeof value === 'object') ? value[keyField] : value;
+            return {
+                url: 'https://localhost:44372/Grid/Remove',
+                type: 'POST', // use DELETE if your server expects it
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ key: keyValue })
+            };
+        }
+
+        // ---- UPDATE with optional overide ----
+        // value is the updated entity, keyField is the PK name used by Grid
+        batchRequest(dm, changes, keyField) {
+            return {
+                url: 'https://localhost:44372/Grid/BatchUpdate',
+                type: 'POST', // use PUT if your server expects PUT
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ added: changes.addedRecords, changed: changes.changedRecords, deleted: changes.deletedRecords })
+            };
+        }
+	}
+	function load() {
+		this.dataSource = new ej.data.DataManager({
+            url: 'https://localhost:44372/Grid/UrlDataSource', // Update with your API endpoint.
+            insertUrl: 'https://localhost:44372/Grid/Insert', // Without optional overide, this is enough
+            updateUrl: 'https://localhost:44372/Grid/Update', // Without optional overide, this is enough
+            removeUrl: 'https://localhost:44372/Grid/Remove', // Without optional overide, this is enough
+            batchUrl: 'https://localhost:44372/Grid/BatchUpdate', // Without optional overide, this is enough
+			adaptor: new CustomAdaptor
+		});
+	}
+</script>

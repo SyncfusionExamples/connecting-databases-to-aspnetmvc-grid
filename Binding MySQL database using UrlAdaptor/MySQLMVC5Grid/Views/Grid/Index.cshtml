@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var date = DateTime.Now;
+}
+<div style="margin-top: 100px">
+    @Html.EJS().Grid("Grid").DataSource(ds => ds.Url("https://localhost:44372/Grid/UrlDataSource")
+        .UpdateUrl("https://localhost:44372/Grid/Update")
+        .InsertUrl("https://localhost:44372/Grid/Insert")
+        .RemoveUrl("https://localhost:44372/Grid/Remove")
+        .BatchUrl("https://localhost:44372/Grid/BatchUpdate").Adaptor("UrlAdaptor")).Columns(col =>
+        {
+            col.Field("SNo").HeaderText("S.No").Width("70").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+            col.Field("Id").HeaderText("ID").Width("80").IsPrimaryKey(true).IsIdentity(true).TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).Add();
+            col.Field("TransactionId").HeaderText("Transaction ID").Width("160").ValidationRules(new { required = true, maxLength = 50 }).Add();
+            col.Field("CustomerId").HeaderText("Customer ID").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).EditType("numericedit").ValidationRules(new { required = true, number = true }).Add();
+            col.Field("OrderId").HeaderText("Order ID").Width("120").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).EditType("numericedit").ValidationRules(new { number = true }).Add();
+            col.Field("InvoiceNumber").HeaderText("Invoice #").Width("150").ValidationRules(new { maxLength = 50 }).Add();
+            col.Field("Description").HeaderText("Description").Width("220").ValidationRules(new { maxLength = 500 }).Add();
+            col.Field("Amount").HeaderText("Amount").Width("130").TextAlign(Syncfusion.EJ2.Grids.TextAlign.Right).EditType("numericedit").Format("N2").ValidationRules(new { required = true, number = true }).Add();
+            col.Field("CurrencyCode").HeaderText("Currency").Width("110").ValidationRules(new { maxLength = 10 }).Add();
+            col.Field("TransactionType").HeaderText("Type").Width("120").ValidationRules(new { maxLength = 50 }).Add();
+            col.Field("PaymentGateway").HeaderText("Gateway").Width("140").ValidationRules(new { maxLength = 100 }).Add();
+            col.Field("CreatedAt").HeaderText("Created At").Type("datetime").Format("dd/MM/yyyy HH:mm:ss a").Width("190").DefaultValue(date).Add();
+            col.Field("CompletedAt").HeaderText("Completed At").Type("datetime").Format("dd/MM/yyyy HH:mm:ss a").Width("190").EditType("datetimepickeredit").Add();
+            col.Field("Status").HeaderText("Status").Width("130").ValidationRules(new { maxLength = 50 }).DefaultValue("SUCCESS").Add();
+        }).AllowSorting(true).AllowFiltering(true).AllowPaging(true).PageSettings(page => page.PageSize(2)).EditSettings(edit =>
+        {
+            edit.AllowAdding(true).AllowEditing(true).AllowDeleting(true).Mode(Syncfusion.EJ2.Grids.EditMode.Normal);
+        }).Toolbar(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel", "Search" }).Render()
+</div>
+<script></script>

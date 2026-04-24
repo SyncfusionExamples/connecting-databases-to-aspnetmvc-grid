@@ -1,6 +1,6 @@
 # Connecting Databases to Syncfusion ASP.NET MVC Grid
 
-## Project Description
+## Repository Description
 
 A suite of projects that enable data binding and CRUD action handling in the Syncfusion ASP.NET MVC Grid from various databases using CustomAdaptor and UrlAdaptor.
 
